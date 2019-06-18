@@ -1,0 +1,8 @@
+.vs/
+bin/
+obj/
+TNT.CmdLineParser/
+TestResults/
+*.user
+packages/
+trunk/
