@@ -86,5 +86,23 @@ namespace TNT.ArgumentParser {
                 return ResourceManager.GetString("ARGUMENT_MUST_NOT_BE_EMPTY", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Argument &apos;{0}&apos; is invalid.
+        /// </summary>
+        internal static string INVALID_ARGUMENT_NAME {
+            get {
+                return ResourceManager.GetString("INVALID_ARGUMENT_NAME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Argument &apos;{0}&apos; is required.
+        /// </summary>
+        internal static string REQUIRED_ARGUMENT_MISSING {
+            get {
+                return ResourceManager.GetString("REQUIRED_ARGUMENT_MISSING", resourceCulture);
+            }
+        }
     }
 }

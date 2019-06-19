@@ -126,4 +126,10 @@
   <data name="ARGUMENT_MUST_NOT_BE_EMPTY" xml:space="preserve">
     <value>Argument must not be empty</value>
   </data>
+  <data name="INVALID_ARGUMENT_NAME" xml:space="preserve">
+    <value>Argument '{0}' is invalid</value>
+  </data>
+  <data name="REQUIRED_ARGUMENT_MISSING" xml:space="preserve">
+    <value>Argument '{0}' is required</value>
+  </data>
 </root>

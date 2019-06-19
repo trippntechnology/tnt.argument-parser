@@ -26,7 +26,7 @@ namespace TNT.ArgumentParser
 		/// <summary>
 		/// Indicates if the argument is required
 		/// </summary>
-		public virtual bool IsRequired { get; protected set; }
+		public virtual bool IsRequired { get; set; }
 
 		/// <summary>
 		/// Contains the value associated with the argument name
