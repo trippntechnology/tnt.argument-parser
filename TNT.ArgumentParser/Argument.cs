@@ -7,22 +7,21 @@ namespace TNT.ArgumentParser
 	/// <summary>
 	/// Abstract class that represents an argument
 	/// </summary>
-	/// <typeparam name="T">Type associated with this argument</typeparam>
-	public abstract class Argument<T> : IArgument
+	public abstract class Argument
 	{
 		private const int USAGE_LINE_LENGTH = 70;
 
-		private T m_Value = default(T);
+		private object m_Value = null;
 
 		/// <summary>
 		/// Argument name
 		/// </summary>
-		//public virtual string Name { get; internal set; }
+		public virtual string Name { get; protected set; }
 
 		/// <summary>
 		/// Argument description
 		/// </summary>
-		public virtual string Description { get; internal set; }
+		public virtual string Description { get; protected set; }
 
 		/// <summary>
 		/// Indicates if the argument is required
@@ -32,12 +31,17 @@ namespace TNT.ArgumentParser
 		/// <summary>
 		/// Contains the value associated with the argument name
 		/// </summary>
-		public virtual T Value { get { return m_Value == null ? DefaultValue : m_Value; } }
+		public virtual object Value { get { return m_Value ?? DefaultValue; } }
 
 		/// <summary>
 		/// Default value
 		/// </summary>
-		public virtual T DefaultValue { get; internal set; }
+		public virtual object DefaultValue { get; protected set; }
+
+		/// <summary>
+		/// Indicates the type of argument
+		/// </summary>
+		public abstract string Type { get; }
 
 		/// <summary>
 		/// Get the syntax of the argument as displayed on the command-line
@@ -46,7 +50,7 @@ namespace TNT.ArgumentParser
 		{
 			get
 			{
-				string syntax = $"/{Name} <{typeof(T).Name}>";
+				string syntax = $"/{Name} <{Type}>";
 
 				if (!IsRequired)
 				{
@@ -58,19 +62,19 @@ namespace TNT.ArgumentParser
 		}
 
 		/// <summary>
-		/// Initializes an <see cref="Argument{T}"/>
+		/// Initializes an <see cref="Argument"/>
 		/// </summary>
 		/// <param name="name">Name associated with argument</param>
 		/// <param name="description">Description associated with argument</param>
 		/// <param name="required">Indicates the argument is required (default = false). Note, if a <paramref name="defaultValue"/>
 		/// is provided, the argument will not be required, i.e. set to false.</param>
-		/// <param name="defaultValue">Indicates the default value of the argument (default = default(T))</param>
-		protected Argument(string name, string description, bool required = false, T defaultValue = default(T))
+		/// <param name="defaultValue">Indicates the default value of the argument (default = null)</param>
+		protected Argument(string name, string description, bool required = false, object defaultValue = null)
 		{
 			Name = name;
 			Description = description;
 			DefaultValue = defaultValue;
-			IsRequired = DefaultValue == null || DefaultValue.Equals(default(T)) == true ? required : false;
+			IsRequired = DefaultValue == null ? required : false;
 		}
 
 		/// <summary>
@@ -81,19 +85,25 @@ namespace TNT.ArgumentParser
 		/// not valid</param>
 		/// <returns>True if valid, otherwise false. <paramref name="msg"/> should return a descriptive message
 		/// as to why <paramref name="value"/> is not valid</returns>
-		protected abstract bool IsValid(T value, out string msg);
+		//protected abstract bool IsValid(T value, out string msg);
+
+		/// <summary>
+		/// Transforms the <see cref="Value"/> to the object type expected by this <see cref="Argument"/>
+		/// </summary>
+		/// <param name="value">Value of reference of this <see cref="Argument"/></param>
+		/// <returns><see cref="object"/> referenced by <paramref name="value"/></returns>
+		/// <exception cref="ArgumentException">Throw if value can not be transformed to object type</exception>
+		protected abstract object Transform(string value);
 
 		/// <summary>
 		/// Sets the argument value
 		/// </summary>
 		/// <param name="value"></param>
 		/// <exception cref="ArgumentException">Thrown if the value is not valid</exception>
-		public virtual void SetValue(T value)
+		public virtual void SetValue(string value)
 		{
 			if (m_Value != null) throw new ArgumentException(Resources.ARGUMENT_ALREADY_SET);
-			if (!IsValid(value, out string msg)) throw new ArgumentException(msg);
-
-			m_Value = value;
+			m_Value = Transform(value);
 		}
 
 		/// <summary>
@@ -104,8 +114,7 @@ namespace TNT.ArgumentParser
 		{
 			StringBuilder usage = new StringBuilder();
 			var defaultText = String.Empty;
-			if (this.DefaultValue?.Equals(default(T)) == false) { defaultText = $" (default: {this.DefaultValue.ToString()})"; }
-			//if (this.DefaultValue != null || this.DefaultValue?.Equals(default(T)) == true) { defaultText = $" (default: {this.DefaultValue.ToString()})"; }
+			if (this.DefaultValue != null) { defaultText = $" (default: {this.DefaultValue.ToString()})"; }
 			string description = $"{this.Description}{defaultText}";
 			string[] lines = WrapLines(description);
 

@@ -3,10 +3,20 @@
 namespace TNT.ArgumentParser
 {
 	/// <summary>
-	/// Represents a <see cref="string"/> <see cref="Argument{T}"/>
+	/// Represents a <see cref="string"/> <see cref="Argument"/>
 	/// </summary>
-	public class StringArgument : Argument<string>
+	public class StringArgument : Argument
 	{
+		/// <summary>
+		/// The value of the <see cref="StringArgument"/>
+		/// </summary>
+		public new string Value => (string)base.Value;
+
+		/// <summary>
+		/// Type represented by this <see cref="Argument"/>
+		/// </summary>
+		public override string Type => typeof(string).Name;
+
 		/// <summary>
 		/// Initializes a <see cref="string"/> argument parser 
 		/// </summary>
@@ -21,18 +31,15 @@ namespace TNT.ArgumentParser
 		}
 
 		/// <summary>
-		/// Validates the string parsed by the <see cref="Argument{T}"/>
+		/// Sets the <see cref="string"/> on this <see cref="Argument.Value"/>
 		/// </summary>
 		/// <param name="value">Value that is parsed</param>
-		/// <param name="msg">Message that can be return if not valid</param>
 		/// <returns>True if <paramref name="value"/> is valid, false otherwise</returns>
-		protected override bool IsValid(string value, out string msg)
+		/// <exception cref="ArgumentException">Thrown if <paramref name="value"/> is null or white space</exception>
+		protected override object Transform(string value)
 		{
-			msg = string.Empty;
-
-			if (String.IsNullOrWhiteSpace(value)) { msg = Resources.ARGUMENT_MUST_NOT_BE_EMPTY; }
-
-			return String.IsNullOrWhiteSpace(msg);
+			if (String.IsNullOrWhiteSpace(value)) { throw new ArgumentException(Resources.ARGUMENT_MUST_NOT_BE_EMPTY); }
+			return value;
 		}
 	}
 }

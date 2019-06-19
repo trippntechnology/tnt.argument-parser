@@ -44,5 +44,19 @@ namespace Tests
 				throw;
 			}
 		}
+
+		[TestMethod]
+		public void Syntax()
+		{
+			var sut = new FlagArgument(NAME, DESCRIPTION);
+			Assert.AreEqual("[/name]", sut.Syntax);
+		}
+
+		[TestMethod]
+		public void Type()
+		{
+			var sut = new FlagArgument(NAME, DESCRIPTION);
+			Assert.AreEqual(typeof(bool).Name, sut.Type);
+		}
 	}
 }
