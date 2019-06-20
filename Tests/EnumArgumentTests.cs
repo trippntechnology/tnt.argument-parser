@@ -55,13 +55,29 @@ namespace Tests
 				var sut = new EnumArgument<TestEnum>(NAME, DESC, true);
 				Assert.IsTrue(sut.IsRequired);
 				sut.SetValue("foo");
-				Assert.AreEqual(THREE, sut.Value);
 			}
 			catch (Exception ex)
 			{
 				Assert.AreEqual("Argument 'name' is invalid", ex.Message);
 				throw;
 			}
+		}
+
+		[TestMethod]
+		public void GetUsage()
+		{
+			var sut = new EnumArgument<TestEnum>(NAME, DESC, true);
+			Assert.AreEqual("  /name      description\r\n\r\n               ONE\r\n               TWO\r\n               THREE\r\n               FOUR\r\n", sut.GetUsage());
+		}
+
+		[TestMethod]
+		public void GetUsage_EnumToDescription()
+		{
+			var sut = new EnumArgument<TestEnum>(NAME, DESC, true);
+			sut.EnumToDescription = (e) => $"{e.ToString()} description";
+			var expected = "  /name      description\r\n\r\n               ONE - ONE description\r\n               TWO - TWO description\r\n               THREE - THREE description\r\n               FOUR - FOUR description\r\n";
+			var result = sut.GetUsage();
+			Assert.AreEqual(expected, result);
 		}
 	}
 

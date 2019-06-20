@@ -147,6 +147,7 @@ namespace TNT.ArgumentParser
 			this.Sort((a, b) => b.IsRequired.CompareTo(a.IsRequired));
 			this.ForEach(p => usageTxt.AppendFormat($" {p.Syntax}"));
 			usageTxt.AppendLine();
+			usageTxt.AppendLine();
 			this.ForEach(p => usageTxt.AppendLine(p.GetUsage()));
 
 			return usageTxt.ToString();

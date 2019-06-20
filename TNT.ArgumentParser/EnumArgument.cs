@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace TNT.ArgumentParser
 {
@@ -17,6 +18,12 @@ namespace TNT.ArgumentParser
 		/// Casts the <see cref="Argument.Value"/> to <typeparamref name="T"/>
 		/// </summary>
 		public new T Value => (T)base.Value;
+
+		/// <summary>
+		/// Lambda that can be set to return a description for a given enumeration of 
+		/// <typeparamref name="T"/>
+		/// </summary>
+		public Func<T, string> EnumToDescription { get; set; } = (e) => { return string.Empty; };
 
 		/// <summary>
 		/// Initializes the <see cref="EnumArgument{T}"/>
@@ -55,13 +62,32 @@ namespace TNT.ArgumentParser
 		{
 			try
 			{
-				T t = (T)Enum.Parse(typeof(T), value.ToString());
+				T t = (T)Enum.Parse(typeof(T), value.ToString(), true);
 				return t;
 			}
 			catch
 			{
 				throw new ArgumentException(string.Format(Resources.INVALID_ARGUMENT_NAME, this.Name));
 			}
+		}
+
+		/// <summary>
+		/// Gets the usage of <see cref="EnumArgument{T}"/>
+		/// </summary>
+		/// <returns><see cref="EnumArgument{T}"/> usage</returns>
+		public override string GetUsage()
+		{
+			var usage = new StringBuilder();
+			usage.AppendLine(base.GetUsage());
+			usage.AppendLine();
+
+			foreach (T t in Enum.GetValues(typeof(T)))
+			{
+				var enumDesc = EnumToDescription(t);
+				usage.AppendLine(string.Format("{0,15}{1}{2}", string.Empty, t.ToString(), string.IsNullOrEmpty(enumDesc) ? enumDesc : string.Concat(" - ", enumDesc)));
+			}
+
+			return usage.ToString();
 		}
 	}
 }

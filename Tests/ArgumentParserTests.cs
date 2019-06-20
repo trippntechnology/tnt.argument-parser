@@ -102,22 +102,6 @@ namespace Tests
 			}
 		}
 
-		//[ExpectedException(typeof(ArgumentNullException))]
-		[TestMethod]
-		public void Parse_EmptyArgs()
-		{
-			//try
-			//{
-				var sut = new TestParser();
-				Assert.IsTrue(sut.Parse(new string[0], false));
-			//}
-			//catch (Exception ex)
-			//{
-			//	Assert.AreEqual("Value cannot be null.\r\nParameter name: value", ex.Message);
-			//	throw;
-			//}
-		}
-
 		[ExpectedException(typeof(ArgumentException))]
 		[TestMethod]
 		public void Parse_UnassignedRequiredArgs()
