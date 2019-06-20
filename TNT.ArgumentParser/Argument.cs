@@ -31,7 +31,7 @@ namespace TNT.ArgumentParser
 		/// <summary>
 		/// Contains the value associated with the argument name
 		/// </summary>
-		public virtual object Value { get { return m_Value ?? DefaultValue; } }
+		public virtual object Value => m_Value ?? DefaultValue;
 
 		/// <summary>
 		/// Default value

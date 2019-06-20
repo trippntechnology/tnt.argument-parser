@@ -65,15 +65,12 @@
     <Compile Include="IntArgumentTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringArgumentTests.cs" />
+    <Compile Include="EnumArgumentTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TNT.ArgumentParser\TNT.ArgumentParser.csproj">
       <Project>{1834e154-a77b-484f-bfe9-b3d048145eb6}</Project>
       <Name>TNT.ArgumentParser</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TNT.CmdLineParser\TNT.CmdLineParser.csproj">
-      <Project>{e39a8fec-b366-45c2-8fbe-91ccf0f557fd}</Project>
-      <Name>TNT.CmdLineParser</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
