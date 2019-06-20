@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyVersion>1.0.0.63</AssemblyVersion>
-    <FileVersion>1.0.0.63</FileVersion>
+    <AssemblyVersion>1.0.0.67</AssemblyVersion>
+    <FileVersion>1.0.0.67</FileVersion>
     <Description>TNT Argument Parser</Description>
     <Authors>Tripp'n Technology, LLC.</Authors>
     <Company>Tripp'n Technology, LLC.</Company>
