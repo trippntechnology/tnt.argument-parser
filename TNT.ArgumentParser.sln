@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TNT.ArgumentParser", "TNT.ArgumentParser\TNT.ArgumentParser.csproj", "{1834E154-A77B-484F-BFE9-B3D048145EB6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTest", "ConsoleTest\ConsoleTest.csproj", "{C19D39BA-86A6-43E1-81A6-2CCE32F279FE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TNT.CmdLineParser", "TNT.CmdLineParser\TNT.CmdLineParser.csproj", "{B7F43531-3ED0-45C9-A1B3-60E3C3531102}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{1834E154-A77B-484F-BFE9-B3D048145EB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1834E154-A77B-484F-BFE9-B3D048145EB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1834E154-A77B-484F-BFE9-B3D048145EB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C19D39BA-86A6-43E1-81A6-2CCE32F279FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C19D39BA-86A6-43E1-81A6-2CCE32F279FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C19D39BA-86A6-43E1-81A6-2CCE32F279FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C19D39BA-86A6-43E1-81A6-2CCE32F279FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7F43531-3ED0-45C9-A1B3-60E3C3531102}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7F43531-3ED0-45C9-A1B3-60E3C3531102}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7F43531-3ED0-45C9-A1B3-60E3C3531102}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7F43531-3ED0-45C9-A1B3-60E3C3531102}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

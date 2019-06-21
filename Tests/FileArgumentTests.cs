@@ -5,7 +5,7 @@ using TNT.ArgumentParser;
 namespace Tests
 {
 	[TestClass]
-	public class FileNameArgumentTests
+	public class FileArgumentTests
 	{
 		const string NAME = "f";
 		const string DESCRIPTION = "description";
@@ -15,28 +15,28 @@ namespace Tests
 		[TestMethod]
 		public void Constructor()
 		{
-			var sut = new FileNameArgument(NAME, DESCRIPTION);
+			var sut = new FileArgument(NAME, DESCRIPTION);
 			Assert.IsFalse(sut.MustExist);
 		}
 
 		[TestMethod]
 		public void Constructor_MustExist()
 		{
-			var sut = new FileNameArgument(NAME, DESCRIPTION, mustExist: true);
+			var sut = new FileArgument(NAME, DESCRIPTION, mustExist: true);
 			Assert.IsTrue(sut.MustExist);
 		}
 
 		[TestMethod]
 		public void Syntax()
 		{
-			var sut = new FileNameArgument(NAME, DESCRIPTION, true);
+			var sut = new FileArgument(NAME, DESCRIPTION, true);
 			Assert.AreEqual("/f <File>", sut.Syntax);
 		}
 
 		[TestMethod]
 		public void Setvalue()
 		{
-			var sut = new FileNameArgument(NAME, DESCRIPTION);
+			var sut = new FileArgument(NAME, DESCRIPTION);
 			sut.SetValue(VALID_FILE_NAME);
 			Assert.AreEqual(VALID_FILE_NAME, sut.Value);
 		}
@@ -47,7 +47,7 @@ namespace Tests
 		{
 			try
 			{
-				var sut = new FileNameArgument(NAME, DESCRIPTION, mustExist: true);
+				var sut = new FileArgument(NAME, DESCRIPTION, mustExist: true);
 				sut.SetValue(INVALID_FILE_NAME);
 			}
 			catch (Exception ex)

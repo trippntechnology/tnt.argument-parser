@@ -105,6 +105,8 @@ namespace TNT.ArgumentParser
 				Console.WriteLine(this.Usage());
 
 				if (!swallowException) throw;
+
+				return false;
 			}
 
 			return true;

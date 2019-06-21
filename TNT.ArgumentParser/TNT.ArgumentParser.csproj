@@ -2,16 +2,27 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyVersion>1.0.0.67</AssemblyVersion>
-    <FileVersion>1.0.0.67</FileVersion>
+    <AssemblyVersion>1.0.0.74</AssemblyVersion>
+    <FileVersion>1.0.0.74</FileVersion>
     <Description>TNT Argument Parser</Description>
     <Authors>Tripp'n Technology, LLC.</Authors>
     <Company>Tripp'n Technology, LLC.</Company>
     <Copyright>Copyright Tripp'n Technology, LLC. 2019</Copyright>
+    <Version>1.0.0-preview-03</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>D:\Steve\gitrepos\tnt.argument-parser\TNT.ArgumentParser\TNT.ArgumentParser.xml</DocumentationFile>
+    <ShouldCreateLogs>True</ShouldCreateLogs>
+    <AdvancedSettingsExpanded>False</AdvancedSettingsExpanded>
+    <UpdateAssemblyVersion>False</UpdateAssemblyVersion>
+    <UpdateAssemblyFileVersion>False</UpdateAssemblyFileVersion>
+    <UpdateAssemblyInfoVersion>False</UpdateAssemblyInfoVersion>
+    <UpdatePackageVersion>True</UpdatePackageVersion>
+    <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
+    <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
+    <PackageVersionSettings>AssemblyVersion.None.Preview</PackageVersionSettings>
   </PropertyGroup>
 
   <ItemGroup>
