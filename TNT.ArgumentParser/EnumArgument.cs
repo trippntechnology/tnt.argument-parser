@@ -30,9 +30,8 @@ namespace TNT.ArgumentParser
 		/// </summary>
 		/// <param name="name">Name associated with argument</param>
 		/// <param name="description">Description associated with argument</param>
-		/// <param name="required">Indicates the argument is required (default = false). Note, if a <paramref name="defaultValue"/>
+		/// <param name="required">Indicates the argument is required (default = false).
 		/// is provided, the argument will not be required, i.e. set to false.</param>
-		/// <param name="defaultValue">Indicates the default value of the argument (default = null)</param>
 		public EnumArgument(string name, string description, bool required = false)
 			: base(name, description, required, null)
 		{
@@ -43,8 +42,6 @@ namespace TNT.ArgumentParser
 		/// </summary>
 		/// <param name="name">Name associated with argument</param>
 		/// <param name="description">Description associated with argument</param>
-		/// <param name="required">Indicates the argument is required (default = false). Note, if a <paramref name="defaultValue"/>
-		/// is provided, the argument will not be required, i.e. set to false.</param>
 		/// <param name="defaultValue">Indicates the default value of the argument (default = null)</param>
 		public EnumArgument(string name, string description, T defaultValue)
 			: base(name, description, false, defaultValue)
@@ -67,7 +64,7 @@ namespace TNT.ArgumentParser
 			}
 			catch
 			{
-				throw new ArgumentException(string.Format(Resources.INVALID_ARGUMENT_NAME, this.Name));
+				return base.Transform(value);
 			}
 		}
 

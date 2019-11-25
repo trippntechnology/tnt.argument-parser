@@ -78,22 +78,12 @@ namespace TNT.ArgumentParser
 		}
 
 		/// <summary>
-		/// Implement by subclass to validate the <see cref="Value"/>
-		/// </summary>
-		/// <param name="value">Value of type <typeparamref name="T"/></param>
-		/// <param name="msg">Message that can be returned by subclass if <paramref name="value"/> is
-		/// not valid</param>
-		/// <returns>True if valid, otherwise false. <paramref name="msg"/> should return a descriptive message
-		/// as to why <paramref name="value"/> is not valid</returns>
-		//protected abstract bool IsValid(T value, out string msg);
-
-		/// <summary>
 		/// Transforms the <see cref="Value"/> to the object type expected by this <see cref="Argument"/>
 		/// </summary>
 		/// <param name="value">Value of reference of this <see cref="Argument"/></param>
 		/// <returns><see cref="object"/> referenced by <paramref name="value"/></returns>
 		/// <exception cref="ArgumentException">Throw if value can not be transformed to object type</exception>
-		protected abstract object Transform(string value);
+		protected virtual object Transform(string value) => throw new ArgumentException(string.Format(Resources.INVALID_ARGUMENT_NAME, this.Name));
 
 		/// <summary>
 		/// Sets the argument value

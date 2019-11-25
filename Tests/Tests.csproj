@@ -67,6 +67,7 @@
     <Compile Include="StringArgumentTests.cs" />
     <Compile Include="EnumArgumentTests.cs" />
     <Compile Include="FileArgumentTests.cs" />
+    <Compile Include="VersionArgumentTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TNT.ArgumentParser\TNT.ArgumentParser.csproj">

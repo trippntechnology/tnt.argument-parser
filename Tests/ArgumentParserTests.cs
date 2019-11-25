@@ -77,6 +77,14 @@ namespace Tests
 		}
 
 		[TestMethod]
+		public void Parse_InvalidArgument_Swallow_Exception()
+		{
+				var sut = new TestParser();
+				var args = new string[] { "/s", "Apple Sauce", "/f", "/i", "57", "/j" };
+				Assert.IsFalse(sut.Parse(args));
+		}
+
+		[TestMethod]
 		public void Parse_ShowUsage()
 		{
 			var sut = new TestParser();

@@ -42,10 +42,10 @@ namespace TNT.ArgumentParser
 		/// </summary>
 		/// <param name="value">File name</param>
 		/// <returns><see cref="string"/> representing a file name</returns>
-		/// <exception cref="AggregateException">Thrown if <see cref="MustExist"/> is true, and it doesn't exist.</exception>
+		/// <exception cref="ArgumentException">Thrown if <see cref="MustExist"/> is true, and it doesn't exist.</exception>
 		protected override object Transform(string value)
 		{
-			if (MustExist && !File.Exists(value)) throw new ArgumentException(String.Format(Resources.INVALID_ARGUMENT_NAME, Name));
+			if (MustExist && !File.Exists(value)) base.Transform(value);
 			return value;
 		}
 	}

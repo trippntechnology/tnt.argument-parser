@@ -66,7 +66,7 @@ namespace Tests
 			}
 			catch (Exception ex)
 			{
-				Assert.AreEqual("Argument must not be empty", ex.Message);
+				Assert.AreEqual("Argument 'name' is invalid", ex.Message);
 				throw;
 			}
 		}
@@ -83,7 +83,7 @@ namespace Tests
 			}
 			catch (Exception ex)
 			{
-				Assert.AreEqual("Argument must not be empty", ex.Message);
+				Assert.AreEqual("Argument 'name' is invalid", ex.Message);
 				throw;
 			}
 		}

@@ -43,7 +43,6 @@ namespace TNT.ArgumentParser
 		/// <summary>
 		/// Adds a new <see cref="Argument"/>
 		/// </summary>
-		/// <typeparam name="T">Type of <see cref="Argument"/></typeparam>
 		/// <param name="argument"><see cref="Argument"/> to add</param>
 		/// <exception cref="ArgumentException">Argument already exists</exception>
 		public virtual new void Add(Argument argument)
@@ -155,6 +154,11 @@ namespace TNT.ArgumentParser
 			return usageTxt.ToString();
 		}
 
+		/// <summary>
+		/// Converts <paramref name="args"/> that represent a lsit of name/value pairs into a <see cref="List{T}"/> of name/value pairs
+		/// </summary>
+		/// <param name="args"><see cref="string"/> array of values that represent name/value pairs of arguments</param>
+		/// <returns><see cref="List{T}"/> of name/value pairs that represent <paramref name="args"/></returns>
 		protected List<(string name, string value)> ToPairs(string[] args)
 		{
 			var joinedArgs = string.Join(" ", args);

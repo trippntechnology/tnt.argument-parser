@@ -38,7 +38,7 @@ namespace TNT.ArgumentParser
 		/// <exception cref="ArgumentException">Thrown if <paramref name="value"/> is null or white space</exception>
 		protected override object Transform(string value)
 		{
-			if (String.IsNullOrWhiteSpace(value)) { throw new ArgumentException(Resources.ARGUMENT_MUST_NOT_BE_EMPTY); }
+			if (String.IsNullOrWhiteSpace(value)) { base.Transform(value); }
 			return value;
 		}
 	}
