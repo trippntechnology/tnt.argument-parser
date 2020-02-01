@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace TNT.ArgumentParser
 {
@@ -161,12 +162,13 @@ namespace TNT.ArgumentParser
 		/// <returns><see cref="List{T}"/> of name/value pairs that represent <paramref name="args"/></returns>
 		protected List<(string name, string value)> ToPairs(string[] args)
 		{
-			var joinedArgs = string.Join(" ", args);
-			string[] splitArgs = joinedArgs.Split(new char[] { Delimiter }, StringSplitOptions.RemoveEmptyEntries);
+			var joinedArgs = string.Concat(" ", string.Join(" ", args));
+			var splitArgs = Regex.Split(joinedArgs, $" {Delimiter}");
 			var pairs = new List<(string name, string value)>();
 
 			foreach (var arg in splitArgs)
 			{
+				if (string.IsNullOrWhiteSpace(arg)) continue;
 				var keyValue = arg.Split(new char[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
 				var key = keyValue[0].Trim();
 				var value = keyValue.Length == 2 ? keyValue[1].Trim() : null;

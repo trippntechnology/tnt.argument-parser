@@ -42,11 +42,11 @@ namespace Tests
 		[TestMethod]
 		public void ToPairs()
 		{
-			var args = new string[] { "/s", "Apple Sauce", "/f", "/i", "57" };
+			var args = new string[] { "/s", "https://Apple Sauce", "/f", "/i", "57" };
 			var sut = new TestParser();
 
 			var result = sut.ToPairs(args);
-			var expected = new List<(string name, string value)>() { ("s", "Apple Sauce"), ("f", null), ("i", "57") };
+			var expected = new List<(string name, string value)>() { ("s", "https://Apple Sauce"), ("f", null), ("i", "57") };
 			CollectionAssert.AreEqual(expected, result);
 		}
 
