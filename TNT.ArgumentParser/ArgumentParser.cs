@@ -162,22 +162,22 @@ namespace TNT.ArgumentParser
 		/// <returns><see cref="List{T}"/> of name/value pairs that represent <paramref name="args"/></returns>
 		protected List<(string name, string value)> ToPairs(string[] args)
 		{
-			var joinedArgs = string.Concat(" ", string.Join(" ", args));
-			var splitArgs = Regex.Split(joinedArgs, $" {Delimiter}");
-			var pairs = new List<(string name, string value)>();
+			var pairList = new List<Pair<string, string>>();
 
-			foreach (var arg in splitArgs)
+			foreach (var arg in args.ToList())
 			{
-				if (string.IsNullOrWhiteSpace(arg)) continue;
-				var keyValue = arg.Split(new char[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
-				var key = keyValue[0].Trim();
-				var value = keyValue.Length == 2 ? keyValue[1].Trim() : null;
-
-				pairs.Add((key, value));
+				if (arg.StartsWith(Delimiter.ToString()))
+				{
+					pairList.Add(new Pair<string, string>(arg.Split(Delimiter)[1]));
+				}
+				else
+				{
+					var last = pairList.LastOrDefault();
+					last.Value = arg;
+				}
 			}
 
-			return pairs;
+			return (from p in pairList select p.ToTuple()).ToList();
 		}
-
 	}
 }
