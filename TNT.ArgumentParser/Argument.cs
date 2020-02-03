@@ -82,8 +82,7 @@ namespace TNT.ArgumentParser
 		/// </summary>
 		/// <param name="value">Value of reference of this <see cref="Argument"/></param>
 		/// <returns><see cref="object"/> referenced by <paramref name="value"/></returns>
-		/// <exception cref="ArgumentException">Throw if value can not be transformed to object type</exception>
-		protected virtual object Transform(string value) => throw new ArgumentException(string.Format(Resources.INVALID_ARGUMENT_NAME, this.Name));
+		protected abstract object Transform(string value);
 
 		/// <summary>
 		/// Sets the argument value
@@ -93,7 +92,14 @@ namespace TNT.ArgumentParser
 		public virtual void SetValue(string value)
 		{
 			if (m_Value != null) throw new ArgumentException(Resources.ARGUMENT_ALREADY_SET);
-			m_Value = Transform(value);
+			try
+			{
+				m_Value = Transform(value);
+			}
+			catch (Exception inner)
+			{
+				throw new ArgumentException(string.Format(Resources.INVALID_ARGUMENT_NAME, this.Name), inner);
+			}
 		}
 
 		/// <summary>

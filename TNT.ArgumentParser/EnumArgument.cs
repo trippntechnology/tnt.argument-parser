@@ -55,18 +55,7 @@ namespace TNT.ArgumentParser
 		/// <returns>Enumerated value of <typeparamref name="T"/></returns>
 		/// <exception cref="ArgumentException">Thrown if unable to transform <paramref name="value"/> to an 
 		/// enumerated value of <typeparamref name="T"/></exception>
-		protected override object Transform(string value)
-		{
-			try
-			{
-				T t = (T)Enum.Parse(typeof(T), value.ToString(), true);
-				return t;
-			}
-			catch
-			{
-				return base.Transform(value);
-			}
-		}
+		protected override object Transform(string value) => (T)Enum.Parse(typeof(T), value.ToString(), true);
 
 		/// <summary>
 		/// Gets the usage of <see cref="EnumArgument{T}"/>

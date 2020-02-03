@@ -45,7 +45,7 @@ namespace TNT.ArgumentParser
 		/// <exception cref="ArgumentException">Thrown if <see cref="MustExist"/> is true, and it doesn't exist.</exception>
 		protected override object Transform(string value)
 		{
-			if (MustExist && !File.Exists(value)) base.Transform(value);
+			if (MustExist && !File.Exists(value)) throw new ArgumentException();
 			return value;
 		}
 	}

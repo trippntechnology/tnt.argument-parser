@@ -34,16 +34,6 @@ namespace TNT.ArgumentParser
 		/// <param name="value">Value to transform</param>
 		/// <returns><see cref="Version"/> that represents <see cref="Value"/> if transformation is success</returns>
 		/// <exception cref="ArgumentException">When <see cref="Value"/> can not be tranformed into a <see cref="Version"/></exception>
-		protected override object Transform(string value)
-		{
-			try
-			{
-				return Version.Parse(value);
-			}
-			catch (Exception)
-			{
-				return base.Transform(value);
-			}
-		}
+		protected override object Transform(string value) => Version.Parse(value);
 	}
 }
