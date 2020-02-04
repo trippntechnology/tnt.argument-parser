@@ -29,7 +29,7 @@ namespace Tests
 			Assert.AreEqual(13, sut.Value);
 		}
 
-		[ExpectedException(typeof(FormatException))]
+		[ExpectedException(typeof(ArgumentException))]
 		[TestMethod]
 		public void SetValue_Invalid()
 		{
@@ -40,7 +40,8 @@ namespace Tests
 			}
 			catch (Exception ex)
 			{
-				Assert.AreEqual("Input string was not in a correct format.", ex.Message);
+				Assert.AreEqual("Argument 'name' is invalid", ex.Message);
+				Assert.AreEqual("Input string was not in a correct format.", ex.InnerException.Message);
 				throw;
 			}
 		}

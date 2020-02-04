@@ -67,6 +67,8 @@
     <Compile Include="StringArgumentTests.cs" />
     <Compile Include="EnumArgumentTests.cs" />
     <Compile Include="FileArgumentTests.cs" />
+    <Compile Include="PairTests.cs" />
+    <Compile Include="UriArgumentTests.cs" />
     <Compile Include="VersionArgumentTests.cs" />
   </ItemGroup>
   <ItemGroup>
