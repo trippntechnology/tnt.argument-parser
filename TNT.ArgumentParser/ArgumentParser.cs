@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace TNT.ArgumentParser
 {
@@ -33,11 +28,14 @@ namespace TNT.ArgumentParser
 		/// <returns>Argument with the given name</returns>
 		public virtual Argument this[string name] => (from p in this where p.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase) select p).SingleOrDefault();
 
+		protected bool runFromUnitTest;
+
 		/// <summary>
 		/// Initializes the <see cref="ArgumentParser"/>
 		/// </summary>
-		public ArgumentParser()
+		public ArgumentParser(bool runFromUnitTest = false)
 		{
+			this.runFromUnitTest = runFromUnitTest;
 			Add(new FlagArgument(HELP, HELP_DESC));
 		}
 
@@ -46,7 +44,7 @@ namespace TNT.ArgumentParser
 		/// </summary>
 		/// <param name="argument"><see cref="Argument"/> to add</param>
 		/// <exception cref="ArgumentException">Argument already exists</exception>
-		public virtual new void Add(Argument argument)
+		public new virtual void Add(Argument argument)
 		{
 			// Check that this parameter has a unique Name
 			var existingArgument = this[argument.Name];
@@ -129,13 +127,13 @@ namespace TNT.ArgumentParser
 		protected virtual string Usage()
 		{
 			StringBuilder usageTxt = new StringBuilder();
-			Assembly asm = Assembly.GetEntryAssembly();
-
-			// This was added for unit tests. For some reason there isn't an EntryAssembly so use
-			if (asm == null)
+			Assembly? asm = runFromUnitTest switch
 			{
-				asm = Assembly.GetCallingAssembly();
-			}
+				true => Assembly.GetCallingAssembly(),
+				_ => Assembly.GetEntryAssembly()
+			};
+
+			if (asm == null) return "";
 
 			AssemblyDescriptionAttribute ada = ((AssemblyDescriptionAttribute)asm.GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false)[0]);
 			AssemblyCopyrightAttribute acra = ((AssemblyCopyrightAttribute)asm.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false)[0]);

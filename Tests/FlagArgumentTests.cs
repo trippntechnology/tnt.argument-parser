@@ -1,36 +1,36 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Diagnostics.CodeAnalysis;
 using TNT.ArgumentParser;
 
-namespace Tests
+namespace Tests;
+
+[ExcludeFromCodeCoverage]
+public class FlagArgumentTests
 {
-	[TestClass]
-	public class FlagArgumentTests
+	const string NAME = "name";
+	const string DESCRIPTION = "description";
+
+	[Test]
+	public void Constructor()
 	{
-		const string NAME = "name";
-		const string DESCRIPTION = "description";
+		var sut = new FlagArgument(NAME, DESCRIPTION);
+		Assert.That(sut.Name, Is.EqualTo(NAME));
+		Assert.That(sut.Description, Is.EqualTo(DESCRIPTION));
+		Assert.IsTrue(sut.Value == false);
+	}
 
-		[TestMethod]
-		public void Constructor()
-		{
-			var sut = new FlagArgument(NAME, DESCRIPTION);
-			Assert.AreEqual(NAME, sut.Name);
-			Assert.AreEqual(DESCRIPTION, sut.Description);
-			Assert.IsTrue(sut.Value == false);
-		}
+	[Test]
+	public void SetValue()
+	{
+		var sut = new FlagArgument(NAME, DESCRIPTION);
+		Assert.IsTrue(sut.Value == false);
+		sut.SetValue();
+		Assert.IsTrue(sut.Value == true);
+	}
 
-		[TestMethod]
-		public void SetValue()
-		{
-			var sut = new FlagArgument(NAME, DESCRIPTION);
-			Assert.IsTrue(sut.Value == false);
-			sut.SetValue();
-			Assert.IsTrue(sut.Value == true);
-		}
-
-		[ExpectedException(typeof(ArgumentException))]
-		[TestMethod]
-		public void SetValue_AlreadyExists()
+	[Test]
+	public void SetValue_AlreadyExists()
+	{
+		Assert.Throws<ArgumentException>(() =>
 		{
 			try
 			{
@@ -40,23 +40,23 @@ namespace Tests
 			}
 			catch (Exception ex)
 			{
-				Assert.AreEqual("Argument was already provided", ex.Message);
+				Assert.That(ex.Message, Is.EqualTo("Argument was already provided"));
 				throw;
 			}
-		}
+		});
+	}
 
-		[TestMethod]
-		public void Syntax()
-		{
-			var sut = new FlagArgument(NAME, DESCRIPTION);
-			Assert.AreEqual("[/name]", sut.Syntax);
-		}
+	[Test]
+	public void Syntax()
+	{
+		var sut = new FlagArgument(NAME, DESCRIPTION);
+		Assert.That(sut.Syntax, Is.EqualTo("[/name]"));
+	}
 
-		[TestMethod]
-		public void Type()
-		{
-			var sut = new FlagArgument(NAME, DESCRIPTION);
-			Assert.AreEqual(typeof(bool).Name, sut.Type);
-		}
+	[Test]
+	public void Type()
+	{
+		var sut = new FlagArgument(NAME, DESCRIPTION);
+		Assert.That(sut.Type, Is.EqualTo(typeof(bool).Name));
 	}
 }

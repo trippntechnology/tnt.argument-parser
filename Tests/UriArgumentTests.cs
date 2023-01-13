@@ -1,34 +1,34 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Diagnostics.CodeAnalysis;
 using TNT.ArgumentParser;
 
-namespace Tests
+namespace Tests;
+
+[ExcludeFromCodeCoverage]
+public class UriArgumentTests
 {
-	[TestClass]
-	public class UriArgumentTests
+	private const string NAME = "name";
+	private const string DESC = "description";
+	private const string VALID_URI = "https://valid.domain.com";
+
+	[Test]
+	public void Constructor_Defaults()
 	{
-		private const string NAME = "name";
-		private const string DESC = "description";
-		private const string VALID_URI = "https://valid.domain.com";
+		var sut = new UriArgument(NAME, DESC);
+		Assert.That(NAME, Is.EqualTo(sut.Name));
+		Assert.That(DESC, Is.EqualTo(sut.Description));
+		Assert.IsNull(sut.DefaultValue);
+		Assert.That(sut.GetUsage(), Is.EqualTo("  /name      description"));
+		Assert.IsFalse(sut.IsRequired);
+		Assert.That(sut.Syntax, Is.EqualTo("[/name <Uri>]"));
+		Assert.That(sut.Type, Is.EqualTo("Uri"));
+		Assert.IsNull(sut.Value);
 
-		[TestMethod]
-		public void Constructor_Defaults()
-		{
-			var sut = new UriArgument(NAME, DESC);
-			Assert.AreEqual(sut.Name, NAME);
-			Assert.AreEqual(sut.Description, DESC);
-			Assert.IsNull(sut.DefaultValue);
-			Assert.AreEqual("  /name      description", sut.GetUsage());
-			Assert.IsFalse(sut.IsRequired);
-			Assert.AreEqual("[/name <Uri>]", sut.Syntax);
-			Assert.AreEqual("Uri", sut.Type);
-			Assert.IsNull(sut.Value);
+	}
 
-		}
-
-		[ExpectedException(typeof(ArgumentException))]
-		[TestMethod]
-		public void Invalid_Uri()
+	[Test]
+	public void Invalid_Uri()
+	{
+		Assert.Throws<ArgumentException>(() =>
 		{
 			try
 			{
@@ -37,19 +37,19 @@ namespace Tests
 			}
 			catch (Exception ex)
 			{
-				Assert.AreEqual("Argument 'name' is invalid", ex.Message);
+				Assert.That(ex.Message, Is.EqualTo("Argument 'name' is invalid"));
 				throw;
 			}
-		}
+		});
+	}
 
-		[TestMethod]
-		public void Valid_Uri()
-		{
-			var sut = new UriArgument(NAME, DESC);
-			sut.SetValue(VALID_URI);
+	[Test]
+	public void Valid_Uri()
+	{
+		var sut = new UriArgument(NAME, DESC);
+		sut.SetValue(VALID_URI);
 
-			Assert.IsTrue(sut.Value is Uri);
-			Assert.AreEqual(new Uri(VALID_URI + "/"), sut.Value);
-		}
+		Assert.IsTrue(sut.Value is Uri);
+		Assert.That(sut.Value, Is.EqualTo(new Uri(VALID_URI + "/")));
 	}
 }

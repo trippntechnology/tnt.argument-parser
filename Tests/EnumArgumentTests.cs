@@ -1,54 +1,53 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System.Diagnostics.CodeAnalysis;
 using TNT.ArgumentParser;
 
-namespace Tests
+namespace Tests;
+
+[ExcludeFromCodeCoverage]
+public class EnumArgumentTests
 {
-	[TestClass]
-	public class EnumArgumentTests
+	const string NAME = "name";
+	const string DESC = "description";
+	const TestEnum THREE = TestEnum.THREE;
+
+	[Test]
+	public void Constructor_DefaultValues()
 	{
-		const string NAME = "name";
-		const string DESC = "description";
-		const TestEnum THREE = TestEnum.THREE;
+		var sut = new EnumArgument<TestEnum>(NAME, DESC);
+		Assert.That(sut.DefaultValue, Is.Null);
+		Assert.That(sut.Description, Is.EqualTo(DESC));
+		Assert.IsFalse(sut.IsRequired);
+		Assert.That(sut.Name, Is.EqualTo(NAME));
+		Assert.That(sut.Syntax, Is.EqualTo("[/name <TestEnum>]"));
+		Assert.That(sut.Type, Is.EqualTo(typeof(TestEnum).Name));
+	}
 
-		[TestMethod]
-		public void Constructor_DefaultValues()
-		{
-			var sut = new EnumArgument<TestEnum>(NAME, DESC);
-			Assert.IsNull(sut.DefaultValue);
-			Assert.AreEqual(DESC, sut.Description);
-			Assert.IsFalse(sut.IsRequired);
-			Assert.AreEqual(NAME, sut.Name);
-			Assert.AreEqual("[/name <TestEnum>]", sut.Syntax);
-			Assert.AreEqual(typeof(TestEnum).Name, sut.Type);
-			//Assert.IsNull(sut.Value);
-		}
+	[Test]
+	public void Constructor_WithDefaultValues()
+	{
+		var sut = new EnumArgument<TestEnum>(NAME, DESC, THREE);
+		Assert.That(sut.DefaultValue, Is.EqualTo(THREE));
+		Assert.That(sut.Description, Is.EqualTo(DESC));
+		Assert.IsFalse(sut.IsRequired);
+		Assert.That(sut.Name, Is.EqualTo(NAME));
+		Assert.That(sut.Syntax, Is.EqualTo("[/name <TestEnum>]"));
+		Assert.That(sut.Type, Is.EqualTo(typeof(TestEnum).Name));
+		Assert.That(sut.Value, Is.EqualTo(THREE));
+	}
 
-		[TestMethod]
-		public void Constructor_WithDefaultValues()
-		{
-			var sut = new EnumArgument<TestEnum>(NAME, DESC, THREE);
-			Assert.AreEqual(THREE, sut.DefaultValue);
-			Assert.AreEqual(DESC, sut.Description);
-			Assert.IsFalse(sut.IsRequired);
-			Assert.AreEqual(NAME, sut.Name);
-			Assert.AreEqual("[/name <TestEnum>]", sut.Syntax);
-			Assert.AreEqual(typeof(TestEnum).Name, sut.Type);
-			Assert.AreEqual(THREE, sut.Value);
-		}
+	[Test]
+	public void SetValue_Valid()
+	{
+		var sut = new EnumArgument<TestEnum>(NAME, DESC, true);
+		Assert.IsTrue(sut.IsRequired);
+		sut.SetValue(THREE.ToString());
+		Assert.That(sut.Value, Is.EqualTo(THREE));
+	}
 
-		[TestMethod]
-		public void SetValue_Valid()
-		{
-			var sut = new EnumArgument<TestEnum>(NAME, DESC, true);
-			Assert.IsTrue(sut.IsRequired);
-			sut.SetValue(THREE.ToString());
-			Assert.AreEqual(THREE, sut.Value);
-		}
-
-		[ExpectedException(typeof(ArgumentException))]
-		[TestMethod]
-		public void SetValue_Invalid()
+	[Test]
+	public void SetValue_Invalid()
+	{
+		Assert.Throws<ArgumentException>(() =>
 		{
 			try
 			{
@@ -58,31 +57,31 @@ namespace Tests
 			}
 			catch (Exception ex)
 			{
-				Assert.AreEqual("Argument 'name' is invalid", ex.Message);
+				Assert.That(ex.Message, Is.EqualTo("Argument 'name' is invalid"));
 				throw;
 			}
-		}
-
-		[TestMethod]
-		public void GetUsage()
-		{
-			var sut = new EnumArgument<TestEnum>(NAME, DESC, true);
-			Assert.AreEqual("  /name      description\r\n\r\n               ONE\r\n               TWO\r\n               THREE\r\n               FOUR\r\n", sut.GetUsage());
-		}
-
-		[TestMethod]
-		public void GetUsage_EnumToDescription()
-		{
-			var sut = new EnumArgument<TestEnum>(NAME, DESC, true);
-			sut.EnumToDescription = (e) => $"{e.ToString()} description";
-			var expected = "  /name      description\r\n\r\n               ONE - ONE description\r\n               TWO - TWO description\r\n               THREE - THREE description\r\n               FOUR - FOUR description\r\n";
-			var result = sut.GetUsage();
-			Assert.AreEqual(expected, result);
-		}
+		});
 	}
 
-	public enum TestEnum
+	[Test]
+	public void GetUsage()
 	{
-		ONE, TWO, THREE, FOUR
+		var sut = new EnumArgument<TestEnum>(NAME, DESC, true);
+		Assert.That(sut.GetUsage(), Is.EqualTo("  /name      description\r\n\r\n               ONE\r\n               TWO\r\n               THREE\r\n               FOUR\r\n"));
 	}
+
+	[Test]
+	public void GetUsage_EnumToDescription()
+	{
+		var sut = new EnumArgument<TestEnum>(NAME, DESC, true);
+		sut.EnumToDescription = (e) => $"{e.ToString()} description";
+		var expected = "  /name      description\r\n\r\n               ONE - ONE description\r\n               TWO - TWO description\r\n               THREE - THREE description\r\n               FOUR - FOUR description\r\n";
+		var result = sut.GetUsage();
+		Assert.That(result, Is.EqualTo(expected));
+	}
+}
+
+public enum TestEnum
+{
+	ONE, TWO, THREE, FOUR
 }

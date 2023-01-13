@@ -1,62 +1,62 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System.Diagnostics.CodeAnalysis;
 using TNT.ArgumentParser;
 
-namespace Tests
+namespace Tests;
+
+[ExcludeFromCodeCoverage]
+public class StringArgumentTests
 {
-	[TestClass]
-	public class StringArgumentTests
+	const string NAME = "name";
+	const string DESCRIPTION = "description";
+	const string LONG_DESCRIPTION = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.";
+	const string DEFAULT_VALUE = "default_value";
+	const string VALUE = "value";
+	const string NEW_VALUE = "new_value";
+
+	[Test]
+	public void Constructor_UsingDefaultValues()
 	{
-		const string NAME = "name";
-		const string DESCRIPTION = "description";
-		const string LONG_DESCRIPTION = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.";
-		const string DEFAULT_VALUE = "default_value";
-		const string VALUE = "value";
-		const string NEW_VALUE = "new_value";
+		var sut = new StringArgument(NAME, DESCRIPTION);
 
-		[TestMethod]
-		public void Constructor_UsingDefaultValues()
-		{
-			var sut = new StringArgument(NAME, DESCRIPTION);
+		Assert.That(sut.Name, Is.EqualTo(NAME));
+		Assert.That(sut.Description, Is.EqualTo(DESCRIPTION));
+		Assert.IsFalse(sut.IsRequired);
+		Assert.IsNull(sut.DefaultValue);
+		Assert.That(sut.Syntax, Is.EqualTo("[/name <String>]"));
+		Assert.That(sut.GetUsage(), Is.EqualTo("  /name      description"));
+	}
 
-			Assert.AreEqual(NAME, sut.Name);
-			Assert.AreEqual(DESCRIPTION, sut.Description);
-			Assert.IsFalse(sut.IsRequired);
-			Assert.IsNull(sut.DefaultValue);
-			Assert.AreEqual("[/name <String>]", sut.Syntax);
-			Assert.AreEqual("  /name      description", sut.GetUsage());
-		}
+	[Test]
+	public void Constructor_RequiredTrue()
+	{
+		var sut = new StringArgument(NAME, DESCRIPTION, true);
 
-		[TestMethod]
-		public void Constructor_RequiredTrue()
-		{
-			var sut = new StringArgument(NAME, DESCRIPTION, true);
+		Assert.That(sut.Name, Is.EqualTo(NAME));
+		Assert.That(sut.Description, Is.EqualTo(DESCRIPTION));
+		Assert.IsTrue(sut.IsRequired);
+		Assert.IsNull(sut.DefaultValue);
+		Assert.That(sut.Syntax, Is.EqualTo("/name <String>"));
+		Assert.That(sut.GetUsage(), Is.EqualTo("  /name      description"));
+	}
 
-			Assert.AreEqual(NAME, sut.Name);
-			Assert.AreEqual(DESCRIPTION, sut.Description);
-			Assert.IsTrue(sut.IsRequired);
-			Assert.IsNull(sut.DefaultValue);
-			Assert.AreEqual("/name <String>", sut.Syntax);
-			Assert.AreEqual("  /name      description", sut.GetUsage());
-		}
+	[Test]
+	public void Constructor_WithDefault()
+	{
+		var sut = new StringArgument(NAME, DESCRIPTION, true, DEFAULT_VALUE);
 
-		[TestMethod]
-		public void Constructor_WithDefault()
-		{
-			var sut = new StringArgument(NAME, DESCRIPTION, true, DEFAULT_VALUE);
+		Assert.That(sut.Name, Is.EqualTo(NAME));
+		Assert.That(sut.Description, Is.EqualTo(DESCRIPTION));
+		Assert.IsFalse(sut.IsRequired);
+		Assert.That(sut.DefaultValue, Is.EqualTo(DEFAULT_VALUE));
+		Assert.That(sut.Syntax, Is.EqualTo("[/name <String>]"));
+		Assert.That(sut.GetUsage(), Is.EqualTo("  /name      description (default: default_value)"));
+		Assert.That(sut.Value, Is.EqualTo(DEFAULT_VALUE));
+	}
 
-			Assert.AreEqual(NAME, sut.Name);
-			Assert.AreEqual(DESCRIPTION, sut.Description);
-			Assert.IsFalse(sut.IsRequired);
-			Assert.AreEqual(DEFAULT_VALUE, sut.DefaultValue);
-			Assert.AreEqual("[/name <String>]", sut.Syntax);
-			Assert.AreEqual("  /name      description (default: default_value)", sut.GetUsage());
-			Assert.AreEqual(DEFAULT_VALUE, sut.Value);
-		}
-
-		[ExpectedException(typeof(ArgumentException))]
-		[TestMethod]
-		public void SetValue_NoValue()
+	[Test]
+	public void SetValue_NoValue()
+	{
+		Assert.Throws<ArgumentException>(() =>
 		{
 			var sut = new StringArgument(NAME, DESCRIPTION);
 
@@ -66,14 +66,16 @@ namespace Tests
 			}
 			catch (Exception ex)
 			{
-				Assert.AreEqual("Argument 'name' is invalid", ex.Message);
+				Assert.That(ex.Message, Is.EqualTo("Argument 'name' is invalid"));
 				throw;
 			}
-		}
+		});
+	}
 
-		[ExpectedException(typeof(ArgumentException))]
-		[TestMethod]
-		public void SetValue_Null()
+	[Test]
+	public void SetValue_Null()
+	{
+		Assert.Throws<ArgumentException>(() =>
 		{
 			var sut = new StringArgument(NAME, DESCRIPTION);
 
@@ -83,14 +85,16 @@ namespace Tests
 			}
 			catch (Exception ex)
 			{
-				Assert.AreEqual("Argument 'name' is invalid", ex.Message);
+				Assert.That(ex.Message, Is.EqualTo("Argument 'name' is invalid"));
 				throw;
 			}
-		}
+		});
+	}
 
-		[ExpectedException(typeof(ArgumentException))]
-		[TestMethod]
-		public void SetValue_AlreadySet()
+	[Test]
+	public void SetValue_AlreadySet()
+	{
+		Assert.Throws<ArgumentException>(() =>
 		{
 			var sut = new StringArgument(NAME, DESCRIPTION);
 
@@ -101,26 +105,26 @@ namespace Tests
 			}
 			catch (Exception ex)
 			{
-				Assert.AreEqual("Argument was already provided", ex.Message);
+				Assert.That(ex.Message, Is.EqualTo("Argument was already provided"));
 				throw;
 			}
-		}
+		});
+	}
 
-		[TestMethod]
-		public void SetValue_Valid()
-		{
-			var sut = new StringArgument(NAME, DESCRIPTION);
-			sut.SetValue(VALUE);
-			Assert.AreEqual(VALUE, sut.Value);
-		}
+	[Test]
+	public void SetValue_Valid()
+	{
+		var sut = new StringArgument(NAME, DESCRIPTION);
+		sut.SetValue(VALUE);
+		Assert.That(sut.Value, Is.EqualTo(VALUE));
+	}
 
-		[TestMethod]
-		public void GetUsage_LongDescription()
-		{
-			var sut = new StringArgument(NAME, LONG_DESCRIPTION);
-			var usage = sut.GetUsage();
-			var expected = "  /name      Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam\n             nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam\n             erat, sed diam voluptua.";
-			Assert.AreEqual(expected, sut.GetUsage());
-		}
+	[Test]
+	public void GetUsage_LongDescription()
+	{
+		var sut = new StringArgument(NAME, LONG_DESCRIPTION);
+		var usage = sut.GetUsage();
+		var expected = "  /name      Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam\n             nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam\n             erat, sed diam voluptua.";
+		Assert.That(sut.GetUsage(), Is.EqualTo(expected));
 	}
 }

@@ -1,37 +1,37 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System.Diagnostics.CodeAnalysis;
 using TNT.ArgumentParser;
 
-namespace Tests
+namespace Tests;
+
+[ExcludeFromCodeCoverage]
+public class IntArgumentTests
 {
-	[TestClass]
-	public class IntArgumentTests
+	const string NAME = "name";
+	const string DESCRIPTION = "description";
+
+	[Test]
+	public void Constructor_Defaults()
 	{
-		const string NAME = "name";
-		const string DESCRIPTION = "description";
+		var sut = new IntArgument(NAME, DESCRIPTION);
+		Assert.That(sut.Name, Is.EqualTo(NAME));
+		Assert.That(sut.Description, Is.EqualTo(DESCRIPTION));
+		Assert.IsNull(sut.DefaultValue);
+		Assert.IsFalse(sut.IsRequired);
+		Assert.That(sut.Type, Is.EqualTo(typeof(Int32).Name));
+	}
 
-		[TestMethod]
-		public void Constructor_Defaults()
-		{
-			var sut = new IntArgument(NAME, DESCRIPTION);
-			Assert.AreEqual(NAME, sut.Name);
-			Assert.AreEqual(DESCRIPTION, sut.Description);
-			Assert.IsNull(sut.DefaultValue);
-			Assert.IsFalse(sut.IsRequired);
-			Assert.AreEqual(typeof(Int32).Name, sut.Type);
-		}
+	[Test]
+	public void SetValue_Valid()
+	{
+		var sut = new IntArgument(NAME, DESCRIPTION);
+		sut.SetValue("13");
+		Assert.That(sut.Value, Is.EqualTo(13));
+	}
 
-		[TestMethod]
-		public void SetValue_Valid()
-		{
-			var sut = new IntArgument(NAME, DESCRIPTION);
-			sut.SetValue("13");
-			Assert.AreEqual(13, sut.Value);
-		}
-
-		[ExpectedException(typeof(ArgumentException))]
-		[TestMethod]
-		public void SetValue_Invalid()
+	[Test]
+	public void SetValue_Invalid()
+	{
+		Assert.Throws<ArgumentException>(() =>
 		{
 			try
 			{
@@ -40,10 +40,10 @@ namespace Tests
 			}
 			catch (Exception ex)
 			{
-				Assert.AreEqual("Argument 'name' is invalid", ex.Message);
-				Assert.AreEqual("Input string was not in a correct format.", ex.InnerException.Message);
+				Assert.That(ex.Message, Is.EqualTo("Argument 'name' is invalid"));
+				Assert.That(ex.InnerException.Message, Is.EqualTo("Input string was not in a correct format."));
 				throw;
 			}
-		}
+		});
 	}
 }

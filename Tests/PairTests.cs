@@ -1,42 +1,41 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Diagnostics.CodeAnalysis;
 using TNT.ArgumentParser;
 
-namespace Tests
+namespace Tests;
+
+[ExcludeFromCodeCoverage]
+public class PairTests
 {
-	[TestClass]
-	public class PairTests
+	private const string Key = "key";
+	private const string Value = "value";
+
+	[Test]
+	public void Constructor_Single_Argument()
 	{
-		private const string Key = "key";
-		private const string Value = "value";
+		var sut = new Pair<string, string>(Key);
+		Assert.That(sut.Key, Is.EqualTo("key"));
+		Assert.IsNull(sut.Value);
+	}
 
-		[TestMethod]
-		public void Constructor_Single_Argument()
-		{
-			var sut = new Pair<string, string>(Key);
-			Assert.AreEqual("key", sut.Key);
-			Assert.IsNull(sut.Value);
-		}
+	[Test]
+	public void Constructor_Double_Argument()
+	{
+		var sut = new Pair<string, string>(Key, Value);
+		Assert.That(sut.Key, Is.EqualTo("key"));
+		Assert.That(sut.Value, Is.EqualTo("value"));
+	}
 
-		[TestMethod]
-		public void Constructor_Double_Argument()
-		{
-			var sut = new Pair<string, string>(Key, Value);
-			Assert.AreEqual("key", sut.Key);
-			Assert.AreEqual("value", sut.Value);
-		}
+	[Test]
+	public void Pair_ToString()
+	{
+		var sut = new Pair<string, string>(Key, Value);
+		Assert.That(sut.ToString(), Is.EqualTo("(key, value)"));
+	}
 
-		[TestMethod]
-		public void Pair_ToString()
-		{
-			var sut = new Pair<string, string>(Key, Value);
-			Assert.AreEqual("(key, value)", sut.ToString());
-		}
-
-		[TestMethod]
-		public void ToTuple()
-		{
-			var sut = new Pair<string, string>(Key, Value);
-			Assert.AreEqual((Key, Value), sut.ToTuple());
-		}
+	[Test]
+	public void ToTuple()
+	{
+		var sut = new Pair<string, string>(Key, Value);
+		Assert.That(sut.ToTuple(), Is.EqualTo((Key, Value)));
 	}
 }

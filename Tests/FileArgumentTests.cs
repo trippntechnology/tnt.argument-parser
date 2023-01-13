@@ -1,49 +1,49 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System.Diagnostics.CodeAnalysis;
 using TNT.ArgumentParser;
 
-namespace Tests
+namespace Tests;
+
+[ExcludeFromCodeCoverage]
+public class FileArgumentTests
 {
-	[TestClass]
-	public class FileArgumentTests
+	const string NAME = "f";
+	const string DESCRIPTION = "description";
+	const string VALID_FILE_NAME = "file1.txt";
+	const string INVALID_FILE_NAME = "bogus.txt";
+
+	[Test]
+	public void Constructor()
 	{
-		const string NAME = "f";
-		const string DESCRIPTION = "description";
-		const string VALID_FILE_NAME = "file1.txt";
-		const string INVALID_FILE_NAME = "bogus.txt";
+		var sut = new FileArgument(NAME, DESCRIPTION);
+		Assert.IsFalse(sut.MustExist);
+	}
 
-		[TestMethod]
-		public void Constructor()
-		{
-			var sut = new FileArgument(NAME, DESCRIPTION);
-			Assert.IsFalse(sut.MustExist);
-		}
+	[Test]
+	public void Constructor_MustExist()
+	{
+		var sut = new FileArgument(NAME, DESCRIPTION, mustExist: true);
+		Assert.IsTrue(sut.MustExist);
+	}
 
-		[TestMethod]
-		public void Constructor_MustExist()
-		{
-			var sut = new FileArgument(NAME, DESCRIPTION, mustExist: true);
-			Assert.IsTrue(sut.MustExist);
-		}
+	[Test]
+	public void Syntax()
+	{
+		var sut = new FileArgument(NAME, DESCRIPTION, true);
+		Assert.That(sut.Syntax, Is.EqualTo("/f <File>"));
+	}
 
-		[TestMethod]
-		public void Syntax()
-		{
-			var sut = new FileArgument(NAME, DESCRIPTION, true);
-			Assert.AreEqual("/f <File>", sut.Syntax);
-		}
+	[Test]
+	public void Setvalue()
+	{
+		var sut = new FileArgument(NAME, DESCRIPTION);
+		sut.SetValue(VALID_FILE_NAME);
+		Assert.That(sut.Value, Is.EqualTo(VALID_FILE_NAME));
+	}
 
-		[TestMethod]
-		public void Setvalue()
-		{
-			var sut = new FileArgument(NAME, DESCRIPTION);
-			sut.SetValue(VALID_FILE_NAME);
-			Assert.AreEqual(VALID_FILE_NAME, sut.Value);
-		}
-
-		[ExpectedException(typeof(ArgumentException))]
-		[TestMethod]
-		public void Setvalue_InvalidFileName()
+	[Test]
+	public void Setvalue_InvalidFileName()
+	{
+		Assert.Throws<ArgumentException>(() =>
 		{
 			try
 			{
@@ -52,9 +52,9 @@ namespace Tests
 			}
 			catch (Exception ex)
 			{
-				Assert.AreEqual("Argument 'f' is invalid", ex.Message);
+				Assert.That(ex.Message, Is.EqualTo("Argument 'f' is invalid"));
 				throw;
 			}
-		}
+		});
 	}
 }
