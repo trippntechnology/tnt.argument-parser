@@ -1,14 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Title>TNT Argument Parser</Title>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>TNT Argument Parser</Title>
 		<VersionPrefix>2.0.0</VersionPrefix>
 		<Company>Tripp'n Technology, LLC.</Company>
 		<Copyright>Copyright 2023 $(Company)</Copyright>
 		<Description>Command-line argument parser.</Description>
-  </PropertyGroup>
+		<Configurations>Debug;Release;Debug_Nuget_Local</Configurations>
+		<IncludeSymbols>True</IncludeSymbols>
+	</PropertyGroup>
+	<Target Name="DeplyNugetLocal" AfterTargets="Pack" Condition="$(Configuration) == 'Debug_Nuget_Local'">
+		<Exec Command="copy $(ProjectDir)bin\$(Configuration)\$(ProjectName).$(PackageVersion).nupkg D:\NugetRepo" />
+		<Exec Command="copy $(ProjectDir)bin\$(Configuration)\$(ProjectName).$(PackageVersion).symbols.nupkg D:\NugetRepo" />
+	</Target>
 </Project>

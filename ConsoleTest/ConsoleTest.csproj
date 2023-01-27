@@ -9,6 +9,7 @@
     <Description>Console Test</Description>
     <Company>Tripp'n Technology, LLC.</Company>
     <Copyright>Copyright 2023 $(Company)</Copyright>
+    <Configurations>Debug;Release;Debug_Nuget_Local</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
