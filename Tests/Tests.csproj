@@ -12,6 +12,8 @@
     <Description>Test Description</Description>
 
     <Copyright>Test Copyright</Copyright>
+
+    <Configurations>Debug;Release;Debug_Nuget_Local</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
