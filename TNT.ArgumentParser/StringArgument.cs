@@ -10,7 +10,7 @@ namespace TNT.ArgumentParser
 		/// <summary>
 		/// The value of the <see cref="StringArgument"/>
 		/// </summary>
-		public new string Value => (string)base.Value;
+		public new string? Value => (string?)base.Value;
 
 		/// <summary>
 		/// Type represented by this <see cref="Argument"/>
@@ -25,7 +25,7 @@ namespace TNT.ArgumentParser
 		/// <param name="required">Indicates the argument is required. (default: false)</param>
 		/// <param name="defaultValue">Provides a default value to use. Argument also is not required when this is 
 		/// provided</param>
-		public StringArgument(string name, string description, bool required = false, string defaultValue = null)
+		public StringArgument(string name, string description, bool required = false, string? defaultValue = null)
 			: base(name, description, required, defaultValue)
 		{
 		}
@@ -36,7 +36,7 @@ namespace TNT.ArgumentParser
 		/// <param name="value">Value that is parsed</param>
 		/// <returns>True if <paramref name="value"/> is valid, false otherwise</returns>
 		/// <exception cref="ArgumentException">Thrown if <paramref name="value"/> is null or white space</exception>
-		protected override object Transform(string value)
+		protected override object Transform(string? value)
 		{
 			if (String.IsNullOrWhiteSpace(value)) { throw new ArgumentException(); }
 			return value;

@@ -10,7 +10,7 @@ namespace TNT.ArgumentParser
 		/// <summary>
 		/// <see cref="Value"/> represented as a <see cref="Uri"/> type
 		/// </summary>
-		public new Uri Value { get { return (Uri)base.Value; } }
+		public new Uri? Value { get { return (Uri?)base.Value; } }
 
 		/// <summary>
 		/// Indicates the type of this <see cref="Argument"/>
@@ -24,7 +24,7 @@ namespace TNT.ArgumentParser
 		/// <param name="description">Argument's description</param>
 		/// <param name="required">Indicate if the argument is required. Default is false.</param>
 		/// <param name="defaultValue">The default value to use if not specified. Default is null</param>
-		public UriArgument(string name, string description, bool required = false, string defaultValue = null)
+		public UriArgument(string name, string description, bool required = false, string? defaultValue = null)
 	: base(name, description, required, defaultValue)
 		{
 		}
@@ -34,6 +34,6 @@ namespace TNT.ArgumentParser
 		/// </summary>
 		/// <param name="value">Value that should represent a <see cref="Uri"/></param>
 		/// <returns><see cref="Uri"/> created with <paramref name="value"/></returns>
-		protected override object Transform(string value) => new Uri(value);
+		protected override object Transform(string? value) => new Uri(value!);
 	}
 }

@@ -41,7 +41,7 @@ public class IntArgumentTests
 			catch (Exception ex)
 			{
 				Assert.That(ex.Message, Is.EqualTo("Argument 'name' is invalid"));
-				Assert.That(ex.InnerException.Message, Is.EqualTo("Input string was not in a correct format."));
+				Assert.That(ex.InnerException?.Message, Is.EqualTo("The input string 'ab' was not in a correct format."));
 				throw;
 			}
 		});

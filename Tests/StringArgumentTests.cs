@@ -77,7 +77,7 @@ public class StringArgumentTests
 	{
 		Assert.Throws<ArgumentException>(() =>
 		{
-			var sut = new StringArgument(NAME, DESCRIPTION);
+      StringArgument sut = new StringArgument(NAME, DESCRIPTION);
 
 			try
 			{

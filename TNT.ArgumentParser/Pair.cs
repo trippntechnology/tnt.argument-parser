@@ -17,14 +17,14 @@ namespace TNT.ArgumentParser
 		/// <summary>
 		/// Value
 		/// </summary>
-		public V Value { get; set; }
+		public V? Value { get; set; }
 
 		/// <summary>
 		/// Initializes a the <see cref="Key"/> and <see cref="Value"/>
 		/// </summary>
 		/// <param name="key"><see cref="Key"/> value</param>
 		/// <param name="value"><see cref="Value"/> value</param>
-		public Pair(K key, V value)
+		public Pair(K key, V? value)
 		{
 			this.Key = key;
 			this.Value = value;
@@ -49,6 +49,6 @@ namespace TNT.ArgumentParser
 		/// Converts to a <see cref="Tuple"/> with the <see cref="Key"/> and <see cref="Value"/>
 		/// </summary>
 		/// <returns><see cref="Tuple"/> with the <see cref="Key"/> and <see cref="Value"/></returns>
-		public (K, V) ToTuple() => (Key, Value);
+		public (K, V?) ToTuple() => (Key, Value);
 	}
 }
