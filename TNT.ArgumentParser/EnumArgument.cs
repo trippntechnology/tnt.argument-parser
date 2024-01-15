@@ -17,7 +17,7 @@ namespace TNT.ArgumentParser
 		/// <summary>
 		/// Casts the <see cref="Argument.Value"/> to <typeparamref name="T"/>
 		/// </summary>
-		public new T Value => (T)base.Value;
+		public new T? Value => (T?)base.Value;
 
 		/// <summary>
 		/// Lambda that can be set to return a description for a given enumeration of 
@@ -48,14 +48,14 @@ namespace TNT.ArgumentParser
 		{
 		}
 
-		/// <summary>
-		/// Transforms <paramref name="value"/> into an enumerated value of <typeparamref name="T"/>
-		/// </summary>
-		/// <param name="value"><see cref="string"/> to transform</param>
-		/// <returns>Enumerated value of <typeparamref name="T"/></returns>
-		/// <exception cref="ArgumentException">Thrown if unable to transform <paramref name="value"/> to an 
-		/// enumerated value of <typeparamref name="T"/></exception>
-		protected override object Transform(string value) => (T)Enum.Parse(typeof(T), value.ToString(), true);
+    /// <summary>
+    /// Transforms <paramref name="value"/> into an enumerated value of <typeparamref name="T"/>
+    /// </summary>
+    /// <param name="value"><see cref="string"/> to transform</param>
+    /// <returns>Enumerated value of <typeparamref name="T"/></returns>
+    /// <exception cref="ArgumentException">Thrown if unable to transform <paramref name="value"/> to an 
+    /// enumerated value of <typeparamref name="T"/></exception>
+    protected override object Transform(string? value) => (T)Enum.Parse(typeof(T), value!.ToString(), true);
 
 		/// <summary>
 		/// Gets the usage of <see cref="EnumArgument{T}"/>
