@@ -13,12 +13,14 @@ namespace ConsoleTest
     const string ENUM = "e";
     const DayOfWeek ENUM_DEFAULT = DayOfWeek.Sunday;
     const string VERSION = "v";
+    const string GUID = "g";
 
     public bool TheFlag => (this[FLAG] as FlagArgument)?.Value ?? false;
     public string TheString => (this[STRING] as StringArgument)?.Value ?? STRING_DEFAULT;
     public int TheInt => (this[INT] as IntArgument)?.Value ?? INT_DEFAULT;
     public DayOfWeek TheDayOfWeek => (this[ENUM] as EnumArgument<DayOfWeek>)?.Value ?? ENUM_DEFAULT;
     public Version? TheVersion => (this[VERSION] as VersionArgument)?.Value;
+    public Guid? TheGuid => (this[GUID] as GuidArgument)?.Value;
 
     public Arguments()
     {
@@ -26,6 +28,7 @@ namespace ConsoleTest
       this.Add(new StringArgument(STRING, "string description", defaultValue: STRING_DEFAULT));
       this.Add(new IntArgument(INT, "int description", defaultValue: INT_DEFAULT));
       this.Add(new EnumArgument<DayOfWeek>(ENUM, "enum description", ENUM_DEFAULT));
+      this.Add(new GuidArgument(GUID, "guid description"));
 
       var enumArg = (this[ENUM] as EnumArgument<DayOfWeek>);
 
