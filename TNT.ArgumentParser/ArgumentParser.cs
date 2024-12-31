@@ -28,6 +28,9 @@ public abstract class ArgumentParser : List<Argument>
   /// <returns>Argument with the given name</returns>
   public virtual Argument? this[string name] => (from p in this where p.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase) select p).SingleOrDefault();
 
+  /// <summary>
+  /// Internal property used by unit tests
+  /// </summary>
   protected bool runFromUnitTest;
 
   /// <summary>

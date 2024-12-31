@@ -16,12 +16,12 @@ public class VersionArgumentTests
     var sut = new VersionArgument(NAME, DESCRIPTION);
     Assert.That(sut.Name, Is.EqualTo(NAME));
     Assert.That(sut.Description, Is.EqualTo(DESCRIPTION));
-    Assert.IsNull(sut.DefaultValue);
+    Assert.That(sut.DefaultValue, Is.Null);
     Assert.That(sut.GetUsage(), Is.EqualTo("  /name      description"));
-    Assert.IsFalse(sut.IsRequired);
+    Assert.That(sut.IsRequired, Is.False);
     Assert.That(sut.Syntax, Is.EqualTo("[/name <Version>]"));
     Assert.That(sut.Type, Is.EqualTo("Version"));
-    Assert.IsNull(sut.Value);
+    Assert.That(sut.Value, Is.Null);
   }
 
   [Test]
@@ -30,12 +30,12 @@ public class VersionArgumentTests
     var sut = new VersionArgument(NAME, DESCRIPTION, true);
     Assert.That(sut.Name, Is.EqualTo(NAME));
     Assert.That(sut.Description, Is.EqualTo(DESCRIPTION));
-    Assert.IsNull(sut.DefaultValue);
+    Assert.That(sut.DefaultValue, Is.Null);
     Assert.That(sut.GetUsage(), Is.EqualTo("  /name      description"));
-    Assert.IsTrue(sut.IsRequired);
+    Assert.That(sut.IsRequired, Is.True);
     Assert.That(sut.Syntax, Is.EqualTo("/name <Version>"));
     Assert.That(sut.Type, Is.EqualTo("Version"));
-    Assert.IsNull(sut.Value);
+    Assert.That(sut.Value, Is.Null);
   }
 
   [Test]
@@ -46,7 +46,7 @@ public class VersionArgumentTests
     Assert.That(sut.Description, Is.EqualTo(DESCRIPTION));
     Assert.That(sut.DefaultValue, Is.EqualTo(Version.Parse(VERSION)));
     Assert.That(sut.GetUsage(), Is.EqualTo("  /name      description (default: 1.2.3.4)"));
-    Assert.IsFalse(sut.IsRequired);
+    Assert.That(sut.IsRequired, Is.False  );
     Assert.That(sut.Syntax, Is.EqualTo("[/name <Version>]"));
     Assert.That(sut.Type, Is.EqualTo("Version"));
     Assert.That(sut.Value, Is.EqualTo(Version.Parse(VERSION)));

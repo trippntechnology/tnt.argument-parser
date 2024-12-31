@@ -15,16 +15,16 @@ public class FlagArgumentTests
 		var sut = new FlagArgument(NAME, DESCRIPTION);
 		Assert.That(sut.Name, Is.EqualTo(NAME));
 		Assert.That(sut.Description, Is.EqualTo(DESCRIPTION));
-		Assert.IsTrue(sut.Value == false);
+		Assert.That(sut.Value == false, Is.True);
 	}
 
 	[Test]
 	public void SetValue()
 	{
 		var sut = new FlagArgument(NAME, DESCRIPTION);
-		Assert.IsTrue(sut.Value == false);
+		Assert.That(sut.Value == false, Is.True);
 		sut.SetValue();
-		Assert.IsTrue(sut.Value == true);
+		Assert.That(sut.Value == true, Is.True);
 	}
 
 	[Test]

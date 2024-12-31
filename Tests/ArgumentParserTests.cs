@@ -46,7 +46,7 @@ public class ArgumentParserTests
 
     var result = sut.ToPairs(args);
     var expected = new List<(string name, string? value)>() { ("s", "https://AppleSauce.com"), ("f", null), ("i", "57") };
-    CollectionAssert.AreEqual(expected, result);
+    Assert.That(result, Is.EqualTo(expected));
   }
 
   [Test]
@@ -55,7 +55,7 @@ public class ArgumentParserTests
     var sut = new TestParser();
     var args = new string[] { "/s", "Apple Sauce", "/f", "/i", "57" };
 
-    Assert.IsTrue(sut.Parse(args));
+    Assert.That(sut.Parse(args), Is.True);
   }
 
   [Test]
@@ -82,7 +82,7 @@ public class ArgumentParserTests
   {
     var sut = new TestParser();
     var args = new string[] { "/s", "Apple Sauce", "/f", "/i", "57", "/j" };
-    Assert.IsFalse(sut.Parse(args));
+    Assert.That(sut.Parse(args), Is.False);
   }
 
   [Test]
@@ -90,27 +90,9 @@ public class ArgumentParserTests
   {
     TestParser sut = new TestParser();
     string[] args = new string[] { "/s", "Apple Sauce", "/f", "/i", "57", "/h" };
-    Assert.IsFalse(sut.UsageShown);
+    Assert.That(sut.UsageShown, Is.False);
     sut.Parse(args);
-    Assert.IsTrue(sut.UsageShown);
-  }
-
-  //[Test]
-  public void Parse_NullArgs()
-  {
-    Assert.Throws<ArgumentNullException>(() =>
-    {
-      try
-      {
-        TestParser sut = new TestParser();
-        sut.Parse(null, false);
-      }
-      catch (Exception ex)
-      {
-        Assert.That(ex.Message, Is.EqualTo("Value cannot be null. (Parameter 'source')"));
-        throw;
-      }
-    });
+    Assert.That(sut.UsageShown, Is.True);
   }
 
   [Test]

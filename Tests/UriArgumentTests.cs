@@ -16,12 +16,12 @@ public class UriArgumentTests
     var sut = new UriArgument(NAME, DESC);
     Assert.That(sut.Name, Is.EqualTo(NAME));
     Assert.That(sut.Description, Is.EqualTo(DESC));
-    Assert.IsNull(sut.DefaultValue);
+    Assert.That(sut.DefaultValue, Is.Null );
     Assert.That(sut.GetUsage(), Is.EqualTo("  /name      description"));
-    Assert.IsFalse(sut.IsRequired);
+    Assert.That(sut.IsRequired, Is.False);
     Assert.That(sut.Syntax, Is.EqualTo("[/name <Uri>]"));
     Assert.That(sut.Type, Is.EqualTo("Uri"));
-    Assert.IsNull(sut.Value);
+    Assert.That(sut.Value, Is.Null);
 
   }
 
@@ -49,7 +49,7 @@ public class UriArgumentTests
     var sut = new UriArgument(NAME, DESC);
     sut.SetValue(VALID_URI);
 
-    Assert.IsTrue(sut.Value is Uri);
+    Assert.That(sut.Value is Uri, Is.True);
     Assert.That(sut.Value, Is.EqualTo(new Uri(VALID_URI + "/")));
   }
 }

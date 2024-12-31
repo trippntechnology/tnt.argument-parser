@@ -14,7 +14,7 @@ public class PairTests
 	{
 		var sut = new Pair<string, string>(Key);
 		Assert.That(sut.Key, Is.EqualTo("key"));
-		Assert.IsNull(sut.Value);
+		Assert.That(sut.Value, Is.Null);
 	}
 
 	[Test]

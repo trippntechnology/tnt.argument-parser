@@ -20,8 +20,8 @@ public class StringArgumentTests
 
 		Assert.That(sut.Name, Is.EqualTo(NAME));
 		Assert.That(sut.Description, Is.EqualTo(DESCRIPTION));
-		Assert.IsFalse(sut.IsRequired);
-		Assert.IsNull(sut.DefaultValue);
+		Assert.That(sut.IsRequired, Is.False);
+		Assert.That(sut.DefaultValue, Is.Null);
 		Assert.That(sut.Syntax, Is.EqualTo("[/name <String>]"));
 		Assert.That(sut.GetUsage(), Is.EqualTo("  /name      description"));
 	}
@@ -33,8 +33,8 @@ public class StringArgumentTests
 
 		Assert.That(sut.Name, Is.EqualTo(NAME));
 		Assert.That(sut.Description, Is.EqualTo(DESCRIPTION));
-		Assert.IsTrue(sut.IsRequired);
-		Assert.IsNull(sut.DefaultValue);
+		Assert.That(sut.IsRequired, Is.True);
+		Assert.That(sut.DefaultValue, Is.Null);
 		Assert.That(sut.Syntax, Is.EqualTo("/name <String>"));
 		Assert.That(sut.GetUsage(), Is.EqualTo("  /name      description"));
 	}
@@ -46,7 +46,7 @@ public class StringArgumentTests
 
 		Assert.That(sut.Name, Is.EqualTo(NAME));
 		Assert.That(sut.Description, Is.EqualTo(DESCRIPTION));
-		Assert.IsFalse(sut.IsRequired);
+		Assert.That(sut.IsRequired, Is.False);
 		Assert.That(sut.DefaultValue, Is.EqualTo(DEFAULT_VALUE));
 		Assert.That(sut.Syntax, Is.EqualTo("[/name <String>]"));
 		Assert.That(sut.GetUsage(), Is.EqualTo("  /name      description (default: default_value)"));
