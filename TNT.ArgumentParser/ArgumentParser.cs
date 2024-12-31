@@ -1,181 +1,180 @@
 ﻿using System.Reflection;
 using System.Text;
 
-namespace TNT.ArgumentParser
+namespace TNT.ArgumentParser;
+
+/// <summary>
+/// Argument parser
+/// </summary>
+public abstract class ArgumentParser : List<Argument>
 {
+  const string HELP = "h";
+  const string HELP_DESC = "Shows the usage";
+
   /// <summary>
-  /// Argument parser
+  /// Delimiter used to indicate an <see cref="Argument.Name"/>
   /// </summary>
-  public abstract class ArgumentParser : List<Argument>
+  public virtual char Delimiter => '/';
+
+  /// <summary>
+  /// Indicates if the user is requested the usage be displayed
+  /// </summary>
+  protected bool ShowUsage => (this[HELP] as FlagArgument)?.Value ?? false;
+
+  /// <summary>
+  /// Gets the <see cref="Argument"/> with the <paramref name="name"/>
+  /// </summary>
+  /// <param name="name">Arguments's name</param>
+  /// <returns>Argument with the given name</returns>
+  public virtual Argument? this[string name] => (from p in this where p.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase) select p).SingleOrDefault();
+
+  protected bool runFromUnitTest;
+
+  /// <summary>
+  /// Initializes the <see cref="ArgumentParser"/>
+  /// </summary>
+  public ArgumentParser(bool runFromUnitTest = false)
   {
-    const string HELP = "h";
-    const string HELP_DESC = "Shows the usage";
+    this.runFromUnitTest = runFromUnitTest;
+    Add(new FlagArgument(HELP, HELP_DESC));
+  }
 
-    /// <summary>
-    /// Delimiter used to indicate an <see cref="Argument.Name"/>
-    /// </summary>
-    public virtual char Delimiter => '/';
+  /// <summary>
+  /// Adds a new <see cref="Argument"/>
+  /// </summary>
+  /// <param name="argument"><see cref="Argument"/> to add</param>
+  /// <exception cref="ArgumentException">Argument already exists</exception>
+  public new virtual void Add(Argument argument)
+  {
+    // Check that this parameter has a unique Name
+    var existingArgument = this[argument.Name];
 
-    /// <summary>
-    /// Indicates if the user is requested the usage be displayed
-    /// </summary>
-    protected bool ShowUsage => (this[HELP] as FlagArgument)?.Value ?? false;
-
-    /// <summary>
-    /// Gets the <see cref="Argument"/> with the <paramref name="name"/>
-    /// </summary>
-    /// <param name="name">Arguments's name</param>
-    /// <returns>Argument with the given name</returns>
-    public virtual Argument? this[string name] => (from p in this where p.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase) select p).SingleOrDefault();
-
-    protected bool runFromUnitTest;
-
-    /// <summary>
-    /// Initializes the <see cref="ArgumentParser"/>
-    /// </summary>
-    public ArgumentParser(bool runFromUnitTest = false)
+    if (existingArgument != null)
     {
-      this.runFromUnitTest = runFromUnitTest;
-      Add(new FlagArgument(HELP, HELP_DESC));
+      throw new ArgumentException(string.Format(Resources.ARGUMENT_ALREADY_EXISTS, argument.Name));
     }
 
-    /// <summary>
-    /// Adds a new <see cref="Argument"/>
-    /// </summary>
-    /// <param name="argument"><see cref="Argument"/> to add</param>
-    /// <exception cref="ArgumentException">Argument already exists</exception>
-    public new virtual void Add(Argument argument)
+    base.Add(argument);
+  }
+
+  /// <summary>
+  /// Parses an array of <see cref="String"/> into the <see cref="Argument"/> managed by this if 
+  /// exists. If a failure occurs, the error is printed out to <see cref="Console"/> and the <see cref="Usage"/>
+  /// is displayed.
+  /// </summary>
+  /// <param name="args">Argument strings to parse</param>
+  /// <param name="swallowException">Indicates whether the exception should be swallowed (default: true)</param>
+  /// <returns>True if parsing is successful, false otherwise.</returns>
+  public virtual bool Parse(string[] args, bool swallowException = true)
+  {
+    try
     {
-      // Check that this parameter has a unique Name
-      var existingArgument = this[argument.Name];
+      // Convert the args to a list of pairs
+      List<(string name, string value)> pairs = ToPairs(args);
 
-      if (existingArgument != null)
+      // Find each Argument by name and assign value
+      pairs.ForEach(p =>
       {
-        throw new ArgumentException(string.Format(Resources.ARGUMENT_ALREADY_EXISTS, argument.Name));
-      }
+        var argument = this[p.name];
 
-      base.Add(argument);
-    }
+        if (argument == null) throw new ArgumentException(String.Format(Resources.INVALID_ARGUMENT_NAME, p.name));
+        argument.SetValue(p.value);
+      });
 
-    /// <summary>
-    /// Parses an array of <see cref="String"/> into the <see cref="Argument"/> managed by this if 
-    /// exists. If a failure occurs, the error is printed out to <see cref="Console"/> and the <see cref="Usage"/>
-    /// is displayed.
-    /// </summary>
-    /// <param name="args">Argument strings to parse</param>
-    /// <param name="swallowException">Indicates whether the exception should be swallowed (default: true)</param>
-    /// <returns>True if parsing is successful, false otherwise.</returns>
-    public virtual bool Parse(string[] args, bool swallowException = true)
-    {
-      try
+      if (ShowUsage)
       {
-        // Convert the args to a list of pairs
-        List<(string name, string value)> pairs = ToPairs(args);
-
-        // Find each Argument by name and assign value
-        pairs.ForEach(p =>
-        {
-          var argument = this[p.name];
-
-          if (argument == null) throw new ArgumentException(String.Format(Resources.INVALID_ARGUMENT_NAME, p.name));
-          argument.SetValue(p.value);
-        });
-
-        if (ShowUsage)
-        {
-          Console.WriteLine();
-          Console.WriteLine(this.Usage());
-          return false;
-        }
-
-        // Update isRequired on arguments the have dependencies
-        SetRequiredDependencies();
-
-        // Find arguments that are were required but weren't assigned
-        var reqArgs = (from a in this where a.IsRequired && a.Value == null select a).ToList();
-        if (reqArgs.Count() > 0) throw new ArgumentException(String.Format(Resources.REQUIRED_ARGUMENT_MISSING, reqArgs[0].Name));
-      }
-      catch (Exception ex)
-      {
-        Console.WriteLine();
-        Console.WriteLine("Error: {0}", ex.Message);
         Console.WriteLine();
         Console.WriteLine(this.Usage());
-
-        if (!swallowException) throw;
-
         return false;
       }
 
-      return true;
+      // Update isRequired on arguments the have dependencies
+      SetRequiredDependencies();
+
+      // Find arguments that are were required but weren't assigned
+      var reqArgs = (from a in this where a.IsRequired && a.Value == null select a).ToList();
+      if (reqArgs.Count() > 0) throw new ArgumentException(String.Format(Resources.REQUIRED_ARGUMENT_MISSING, reqArgs[0].Name));
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine();
+      Console.WriteLine("Error: {0}", ex.Message);
+      Console.WriteLine();
+      Console.WriteLine(this.Usage());
+
+      if (!swallowException) throw;
+
+      return false;
     }
 
-    /// <summary>
-    /// Implement by subclass to set IsRequired on <see cref="Argument"/> that are dependencies
-    /// to other <see cref="Argument"/> based on current usage.
-    /// </summary>
-    protected virtual void SetRequiredDependencies()
-    {
+    return true;
+  }
 
-    }
+  /// <summary>
+  /// Implement by subclass to set IsRequired on <see cref="Argument"/> that are dependencies
+  /// to other <see cref="Argument"/> based on current usage.
+  /// </summary>
+  protected virtual void SetRequiredDependencies()
+  {
 
-    /// <summary>
-    /// Gets the usage text. Usage text is generated by obtaining the assembly's properties and displaying the 
-    /// validation <see cref="Argument"/> descriptions.
-    /// </summary>
-    /// <returns>Usage</returns>
-    protected virtual string Usage()
+  }
+
+  /// <summary>
+  /// Gets the usage text. Usage text is generated by obtaining the assembly's properties and displaying the 
+  /// validation <see cref="Argument"/> descriptions.
+  /// </summary>
+  /// <returns>Usage</returns>
+  protected virtual string Usage()
+  {
+    StringBuilder usageTxt = new StringBuilder();
+    Assembly? asm = runFromUnitTest switch
     {
-      StringBuilder usageTxt = new StringBuilder();
-      Assembly? asm = runFromUnitTest switch
+      true => Assembly.GetCallingAssembly(),
+      _ => Assembly.GetEntryAssembly()
+    };
+
+    if (asm == null) return "";
+
+    AssemblyDescriptionAttribute ada = (AssemblyDescriptionAttribute)asm.GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false)[0];
+    AssemblyCopyrightAttribute acra = (AssemblyCopyrightAttribute)asm.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false)[0];
+    AssemblyCompanyAttribute aca = (AssemblyCompanyAttribute)asm.GetCustomAttributes(typeof(AssemblyCompanyAttribute), false)[0];
+
+    usageTxt.AppendFormat($"{ada.Description} version {asm.GetName()?.Version?.ToString()}\n");
+    usageTxt.AppendLine(acra.Copyright);
+    usageTxt.AppendLine();
+    usageTxt.AppendFormat($"  {Path.GetFileNameWithoutExtension(asm.ManifestModule.Name)}");
+
+    this.Sort((a, b) => b.IsRequired.CompareTo(a.IsRequired));
+    this.ForEach(p => usageTxt.AppendFormat($" {p.Syntax}"));
+    usageTxt.AppendLine();
+    usageTxt.AppendLine();
+    this.ForEach(p => usageTxt.AppendLine(p.GetUsage()));
+
+    return usageTxt.ToString();
+  }
+
+  /// <summary>
+  /// Converts <paramref name="args"/> that represent a lsit of name/value pairs into a <see cref="List{T}"/> of name/value pairs
+  /// </summary>
+  /// <param name="args"><see cref="string"/> array of values that represent name/value pairs of arguments</param>
+  /// <returns><see cref="List{T}"/> of name/value pairs that represent <paramref name="args"/></returns>
+  protected List<(string name, string value)> ToPairs(string[]? args)
+  {
+    List<Pair<string, string>> pairList = new List<Pair<string, string>>();
+
+    foreach (var arg in (args?.ToList() ?? new List<string>()))
+    {
+      if (arg.StartsWith(Delimiter.ToString()))
       {
-        true => Assembly.GetCallingAssembly(),
-        _ => Assembly.GetEntryAssembly()
-      };
-
-      if (asm == null) return "";
-
-      AssemblyDescriptionAttribute ada = (AssemblyDescriptionAttribute)asm.GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false)[0];
-      AssemblyCopyrightAttribute acra = (AssemblyCopyrightAttribute)asm.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false)[0];
-      AssemblyCompanyAttribute aca = (AssemblyCompanyAttribute)asm.GetCustomAttributes(typeof(AssemblyCompanyAttribute), false)[0];
-
-      usageTxt.AppendFormat($"{ada.Description} version {asm.GetName()?.Version?.ToString()}\n");
-      usageTxt.AppendLine(acra.Copyright);
-      usageTxt.AppendLine();
-      usageTxt.AppendFormat($"  {Path.GetFileNameWithoutExtension(asm.ManifestModule.Name)}");
-
-      this.Sort((a, b) => b.IsRequired.CompareTo(a.IsRequired));
-      this.ForEach(p => usageTxt.AppendFormat($" {p.Syntax}"));
-      usageTxt.AppendLine();
-      usageTxt.AppendLine();
-      this.ForEach(p => usageTxt.AppendLine(p.GetUsage()));
-
-      return usageTxt.ToString();
-    }
-
-    /// <summary>
-    /// Converts <paramref name="args"/> that represent a lsit of name/value pairs into a <see cref="List{T}"/> of name/value pairs
-    /// </summary>
-    /// <param name="args"><see cref="string"/> array of values that represent name/value pairs of arguments</param>
-    /// <returns><see cref="List{T}"/> of name/value pairs that represent <paramref name="args"/></returns>
-    protected List<(string name, string value)> ToPairs(string[]? args)
-    {
-      List<Pair<string, string>> pairList = new List<Pair<string, string>>();
-
-      foreach (var arg in (args?.ToList() ??  new List<string>()))
-      {
-        if (arg.StartsWith(Delimiter.ToString()))
-        {
-          pairList.Add(new Pair<string, string>(arg.Split(Delimiter)[1]));
-        }
-        else
-        {
-          var last = pairList.LastOrDefault();
-          if (last != null) last.Value = arg;
-        }
+        pairList.Add(new Pair<string, string>(arg.Split(Delimiter)[1]));
       }
-
-      return (from p in pairList select p.ToTuple()).ToList();
+      else
+      {
+        var last = pairList.LastOrDefault();
+        if (last != null) last.Value = arg;
+      }
     }
+
+    return (from p in pairList select p.ToTuple()).ToList();
   }
 }
